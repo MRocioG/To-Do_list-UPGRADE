@@ -20,6 +20,7 @@ body {
   background-image: url('background.png');
   background-size: cover;
   background-repeat: no-repeat;
+  background-attachment: fixed;
   background-position: center;
   color: white;
 }
@@ -28,7 +29,7 @@ h1, h2, h3 {
   text-align: center;
 }
 
-h1{
+h1 {
   color: var(--main-text-color);
 }
 
@@ -39,7 +40,6 @@ h2 {
 h3 {
   color: var(--completed-task-color);
 }
-
 
 .container {
   margin: 30px auto;
