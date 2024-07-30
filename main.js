@@ -1,51 +1,92 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const taskForm = document.getElementById('taskForm');
-    const taskInput = document.getElementById('taskInput');
-    const taskList = document.getElementById('taskList');
-    const completedTaskList = document.getElementById('completedTaskList');
-    const emptyMessage = document.getElementById('emptyMessage');
+class TodoList {
+    constructor() {
+        this.tareas = [];
+    }
 
-    taskForm.addEventListener('submit', function (event) {
+    agregarTarea(tarea) {
+        this.tareas.push(tarea);
+    }
+
+    eliminarTarea(index) {
+        this.tareas.splice(index, 1);
+    }
+
+    completarTarea(index) {
+        const tarea = this.tareas[index];
+        tarea.completed = !tarea.completed;
+    }
+
+    editarTarea(index, nuevoTexto) {
+        this.tareas[index].text = nuevoTexto;
+    }
+
+    obtenerTareas() {
+        return this.tareas;
+    }
+}
+
+class App {
+    constructor() {
+        this.todoList = new TodoList();
+
+        this.taskForm = document.getElementById('taskForm');
+        this.taskInput = document.getElementById('taskInput');
+        this.taskList = document.getElementById('taskList');
+        this.completedTaskList = document.getElementById('completedTaskList');
+        this.emptyMessage = document.getElementById('emptyMessage');
+
+        this.taskForm.addEventListener('submit', (event) => this.addTask(event));
+        this.checkIfEmpty();
+    }
+
+    addTask(event) {
         event.preventDefault();
 
-        const taskText = taskInput.value.trim();
+        const taskText = this.taskInput.value.trim();
         if (taskText === '') {
             alert('Please enter a task.');
             return;
         }
 
-        addTask(taskText);
-        taskInput.value = '';
-        checkIfEmpty();
-    });
+        const task = { text: taskText, completed: false };
+        this.todoList.agregarTarea(task);
 
-    function addTask(taskText) {
+        this.renderTask(task, this.taskList);
+        this.taskInput.value = '';
+        this.checkIfEmpty();
+    }
+
+    renderTask(task, listElement) {
         const listItem = document.createElement('li');
 
         const taskSpan = document.createElement('span');
-        taskSpan.textContent = taskText;
+        taskSpan.textContent = task.text;
         taskSpan.className = 'task-text';
+        if (task.completed) {
+            taskSpan.classList.add('completed');
+        }
 
         const editButton = document.createElement('button');
         editButton.className = 'btn-edit';
         editButton.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>';
         editButton.addEventListener('click', () => {
-            editTask(taskSpan);
+            this.editTask(taskSpan);
         });
 
         const deleteButton = document.createElement('button');
         deleteButton.className = 'btn-delete';
         deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
         deleteButton.addEventListener('click', () => {
-            listItem.remove();
-            checkIfEmpty();
+            const index = Array.from(listElement.children).indexOf(listItem);
+            this.deleteTask(listItem, index, listElement === this.taskList);
         });
 
         const completeButton = document.createElement('button');
         completeButton.className = 'btn-complete';
         completeButton.innerHTML = '<i class="fa-solid fa-check"></i>';
         completeButton.addEventListener('click', () => {
-            completeTask(listItem, taskText);
+            const index = Array.from(listElement.children).indexOf(listItem);
+            this.completeTask(listItem, taskSpan, index);
         });
 
         listItem.appendChild(taskSpan);
@@ -53,46 +94,35 @@ document.addEventListener('DOMContentLoaded', () => {
         listItem.appendChild(completeButton);
         listItem.appendChild(deleteButton);
 
-        taskList.appendChild(listItem);
+        listElement.appendChild(listItem);
     }
 
-    function completeTask(listItem, taskText) {
+    completeTask(listItem, taskSpan, index) {
+        taskSpan.classList.toggle('completed');
+        this.todoList.completarTarea(index);
+
+        const task = this.todoList.obtenerTareas()[index];
         listItem.remove();
-        const completedListItem = document.createElement('li');
 
-        const taskSpan = document.createElement('span');
-        taskSpan.textContent = taskText;
-        taskSpan.className = 'task-text completed';
+        if (task.completed) {
+            this.renderTask(task, this.completedTaskList);
+        } else {
+            this.renderTask(task, this.taskList);
+        }
 
-        const backToDoButton = document.createElement('button');
-        backToDoButton.className = 'btn-back';
-        backToDoButton.innerHTML = '<i class="fa-solid fa-circle-arrow-up"></i>';
-        backToDoButton.addEventListener('click', () => {
-            moveBackToDo(completedListItem, taskText);
-        });
-
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'btn-delete';
-        deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-        deleteButton.addEventListener('click', () => {
-            completedListItem.remove();
-        });
-
-        completedListItem.appendChild(taskSpan);
-        completedListItem.appendChild(backToDoButton);
-        completedListItem.appendChild(deleteButton);
-
-        completedTaskList.appendChild(completedListItem);
-        checkIfEmpty();
+        this.checkIfEmpty();
     }
 
-    function moveBackToDo(listItem, taskText) {
+    deleteTask(listItem, index, isActiveList) {
         listItem.remove();
-        addTask(taskText);
-        checkIfEmpty();
+        this.todoList.eliminarTarea(index);
+
+        if (isActiveList) {
+            this.checkIfEmpty();
+        }
     }
 
-    function editTask(taskSpan) {
+    editTask(taskSpan) {
         const currentText = taskSpan.textContent;
         const input = document.createElement('input');
         input.type = 'text';
@@ -112,6 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
             taskSpan.style.display = 'inline';
             input.remove();
             saveButton.remove();
+
+            const index = Array.from(taskSpan.parentElement.parentElement.children).indexOf(taskSpan.parentElement);
+            this.todoList.editarTarea(index, newText);
         });
 
         taskSpan.style.display = 'none';
@@ -120,13 +153,15 @@ document.addEventListener('DOMContentLoaded', () => {
         input.focus();
     }
 
-    function checkIfEmpty() {
-        if (taskList.children.length === 0) {
-            emptyMessage.style.display = 'block';
+    checkIfEmpty() {
+        if (this.taskList.children.length === 0) {
+            this.emptyMessage.style.display = 'block';
         } else {
-            emptyMessage.style.display = 'none';
+            this.emptyMessage.style.display = 'none';
         }
     }
+}
 
-    checkIfEmpty();
+document.addEventListener('DOMContentLoaded', () => {
+    new App();
 });

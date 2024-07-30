@@ -1,26 +1,50 @@
+:root {
+  --main-bg-color: rgba(255, 255, 255, 0.8);
+  --main-text-color: black;
+  --completed-task-color: grey;
+  --btn-color: teal;
+  --btn-hover-color: darkcyan;
+  --btn-hover-color-alt: lightseagreen;
+  --btn-hover-color-complete: #e0a800;
+  --btn-hover-color-back: #007bff;
+  --empty-text-color: #1f460881;
+  --alert-text-color: #0b4522;
+}
+
 body {
   margin: 0;
   padding: 0;
   font-size: 16px;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.5;
-  background-color: rgb(214, 214, 214);
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  line-height: 1;
+  background-image: url('background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   color: white;
 }
 
-h1,
-h2 {
+h1, h2, h3 {
   text-align: center;
-  color: rgb(0, 0, 0);
 }
 
+h1{
+  color: var(--main-text-color);
+}
+
+h2 {
+  color: var(--alert-text-color);
+}
+
+h3 {
+  color: var(--completed-task-color);
+}
+
+
 .container {
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin: 30px auto;
   width: 30%;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: white;
+  background-color: var(--main-bg-color);
   padding: 30px;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -39,9 +63,8 @@ h2 {
 }
 
 .new_task {
-  margin-left: auto;
-  margin-right: auto;
   width: 100%;
+  margin: 0 auto;
 }
 
 .input-container {
@@ -65,7 +88,7 @@ input[type="text"] {
   border: none;
   color: white;
   font-family: fantasy;
-  background-color: teal;
+  background-color: var(--btn-color);
   font-size: 1.4rem;
   outline: none;
   display: flex;
@@ -75,28 +98,33 @@ input[type="text"] {
 
 .btn-add:hover {
   cursor: pointer;
-  background-color: darkcyan;
+  background-color: var(--btn-hover-color);
 }
 
 .li-container {
-  background-color: white;
+  background-color: var(--main-bg-color);
   width: 100%;
-  color: darkslategray;
+  color: var(--main-text-color);
   margin-top: 20px;
 }
 
 ul {
   padding: 0;
+  margin: 0;
 }
 
 li {
   list-style: none;
-  background-color: lightgray;
-  border-radius: 10px;
-  margin-top: 15px;
+  background-color: var(--main-bg-color);
+  margin: 0;
   display: flex;
   align-items: center;
   padding: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+li:last-child {
+  border-bottom: none;
 }
 
 .task-text {
@@ -106,6 +134,7 @@ li {
 
 .task-text.completed {
   text-decoration: line-through;
+  color: var(--completed-task-color);
 }
 
 .edit-input {
@@ -136,24 +165,34 @@ li {
 }
 
 .btn-delete:hover {
-  color: lightseagreen;
+  color: var(--btn-hover-color-alt);
 }
 
 .btn-complete:hover {
-  color: #e0a800;
+  color: var(--btn-hover-color-complete);
 }
 
 .btn-back:hover {
-  color: #007bff;
+  color: var(--btn-hover-color-back);
 }
 
 .completed-task {
-  background-color: #d3d3d3;
+  background-color: var(--main-bg-color);
   text-decoration: line-through;
 }
 
 .empty {
-  color: darkslategrey;
+  color: var(--empty-text-color);
   text-align: center;
   margin-top: 20px;
+}
+
+.empty h2 {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: var(--alert-text-color);
+}
+
+.completedTasks {
+  background-color: var(--main-bg-color);
 }

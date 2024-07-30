@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TO-DO list</title>
+    <title>TO-DO List</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="icon" href="To-Do_icon.png" type="image/x-icon">
     <link rel="stylesheet" href="./styles.css">
@@ -15,17 +15,16 @@
 
     <div class="container">
 
-        <h1>TO-DO List</h1>
+        <h1>Todo List</h1>
 
         <div class="new_task">
             <form id="taskForm">
                 <div class="input-container">
                     <input type="text" id="taskInput" placeholder="Add task...">
-                    <button id="push" class="btn-add" type="submit">+</button>
+                    <button class="btn-add" type="submit">+</button>
                 </div>
             </form>
         </div>
-
 
         <div id="tasks" class="li-container">
             <ul id="taskList">
@@ -34,10 +33,10 @@
         </div>
 
         <div class="empty" id="emptyMessage">
-            <p>All tasks are completed</p>
+            <h2>All tasks are completed</h2>
         </div>
 
-        <h2>Completed Tasks</h2>
+        <h3>Completed Tasks</h3>
         <div id="completedTasks" class="li-container">
             <ul id="completedTaskList">
 
